@@ -1,0 +1,15 @@
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fillDB": "node ./scr/db/fillDB.js"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1328.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

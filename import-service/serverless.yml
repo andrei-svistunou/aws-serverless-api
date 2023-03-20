@@ -1,0 +1,45 @@
+service: import-service
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  profile: svistic
+  stage: dev
+  region: us-east-1
+  httpApi:
+    cors: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - "s3:ListBucket"
+          Resource:
+            - "arn:aws:s3:::import-service-bucket-s3"
+        - Effect: Allow
+          Action:
+            - "s3:*"
+          Resource:
+            - "arn:aws:s3:::import-service-bucket-s3/*"
+
+functions:
+  importProductsFile:
+    handler: handlers/importProducts.importProductsFile
+    events:
+      - httpApi:
+          method: GET
+          path: /import
+          request:
+            parameters:
+              querystrings:
+                name: true
+  importFileParser:
+    handler: handlers/parseProducts.importFileParser
+    events:
+      - s3:
+        bucket: import-service-bucket-s3
+        event: s3:ObjectCreated:*
+        rules:
+          - prefix: uploaded/
+        existing: true
